@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "3chhbfuuyHoAMCiOWvyEf1nzQ9gk01a20K3AUzAdKCmR/XJ/QoeQRUk27ubOFUe/WNDDlt5FfdL763ZWBhybMQ==",
+  "dgSpecHash": "58Gk92HDg/t5ezEwe4Duq9ojvWiJfRkXUmnhdHu6bQQVg0SbH8LAqsnaazinNBAv632Na8ub97TgJrIgjNv+AQ==",
   "success": true,
   "projectFilePath": "C:\\Prog\\balta\\DataAccess\\DataAccess.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\IST\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\IST\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\IST\\.nuget\\packages\\dapper\\2.1.35\\dapper.2.1.35.nupkg.sha512",
     "C:\\Users\\IST\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\IST\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\IST\\.nuget\\packages\\microsoft.data.sqlclient\\5.2.0\\microsoft.data.sqlclient.5.2.0.nupkg.sha512",

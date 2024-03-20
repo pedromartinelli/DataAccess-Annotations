@@ -58,3 +58,4 @@ C:\Prog\balta\DataAccess\obj\Debug\net7.0\refint\DataAccess.dll
 C:\Prog\balta\DataAccess\obj\Debug\net7.0\DataAccess.pdb
 C:\Prog\balta\DataAccess\obj\Debug\net7.0\DataAccess.genruntimeconfig.cache
 C:\Prog\balta\DataAccess\obj\Debug\net7.0\ref\DataAccess.dll
+C:\Prog\balta\DataAccess\bin\Debug\net7.0\Dapper.dll
