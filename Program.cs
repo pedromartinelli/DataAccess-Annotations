@@ -15,12 +15,12 @@ namespace DataAccess
             using var connection = new SqlConnection(connectionString);
             //CreateCategory(connection);
             //CreateManyCategories(connection);
-            //GetCategory(connection);
+            GetCategory(connection);
             //ListCategories(connection);
             //UpdateCategory(connection);
-            //DeleteCategory(connection);
+            //DeleteCategory(connection, "593a505e-0372-409b-8501-7f3ad53d9ccb");
             //ExecuteProcedure(connection);
-            ExecuteReadProcedure(connection);
+            //ExecuteScalar(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -138,7 +138,15 @@ namespace DataAccess
                 Id = "af3407aa-11ae-4621-a2ef-2028b85507c4"
             });
 
-            Console.WriteLine($"{item.Id} - {item.Title} - {item.Description}");
+            if (item != null)
+            {
+                Console.WriteLine($"{item.Id} - {item.Title}");
+            }
+            else
+            {
+                Console.WriteLine($"Item não encontrado!");
+            }
+
         }
         static void UpdateCategory(SqlConnection connection)
         {
@@ -159,7 +167,7 @@ namespace DataAccess
 
             Console.WriteLine($"{rows} registros atualizados");
         }
-        static void DeleteCategory(SqlConnection connection)
+        static void DeleteCategory(SqlConnection connection, string categoryId)
         {
             var deleteQuery = @"
                     DELETE [Category] WHERE [Id] = @Id;
@@ -167,7 +175,7 @@ namespace DataAccess
 
             var rows = connection.Execute(deleteQuery, new
             {
-                Id = "527ca66f-0b9c-4cfe-93dc-8798ffb59eca"
+                Id = categoryId
             });
 
             Console.WriteLine($"{rows} itens excluído");
@@ -193,6 +201,45 @@ namespace DataAccess
             }
 
         }
+
+        static void ExecuteScalar(SqlConnection connection)
+        {
+            var category = new Category();
+            category.Title = "Amazon AWS teste";
+            category.Url = "amazon";
+            category.Description = "Categoria destinada a serviços do AWS";
+            category.Order = 8;
+            category.Summary = "AWS Cloud";
+            category.Featured = false;
+
+            var insertQuery = @"
+                INSERT INTO
+                    [Category]
+                OUTPUT inserted.[Id]
+                VALUES
+                (
+                    NEWID(),
+                    @Title,
+                    @Url,
+                    @Summary,
+                    @Order,
+                    @Description,
+                    @Featured
+                )";
+
+            var id = connection.ExecuteScalar<Guid>(insertQuery, new
+            {
+                category.Title,
+                category.Url,
+                category.Summary,
+                category.Order,
+                category.Description,
+                category.Featured
+            });
+
+            Console.WriteLine($"A categoria cadastrada foi : {id}");
+        }
+
 
     }
 }
