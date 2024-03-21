@@ -9,7 +9,7 @@ namespace DataAccess
         static void Main(string[] args)
         {
             // string de conexão com o banco
-            const string connectionString = "Server=localhost,1433;Database=balta;User Id=sa;Password=1q2w3e!@#; TrustServerCertificate=true;";
+            string connectionString = "Server=localhost,1433;Database=balta;User Id=sa;Password=1q2w3e!@#; TrustServerCertificate=true;";
 
             var category = new Category();
             category.Id = Guid.NewGuid();
@@ -23,25 +23,38 @@ namespace DataAccess
             var insertSql = @"
                 INSERT INTO
                     [Category]
-                VALUES(
-                    id,
-                    title,
-                    url,
-                    summary,
-                    order,
-                    description,
-                    featured)";
+                VALUES
+                (
+                    @Id,
+                    @Title,
+                    @Url,
+                    @Summary,
+                    @Order,
+                    @Description,
+                    @Featured
+                )";
 
 
             using var connection = new SqlConnection(connectionString);
 
-            var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category]");
+            var rows = connection.Execute(insertSql, new
+            {
+                category.Id,
+                category.Title,
+                category.Url,
+                category.Summary,
+                category.Order,
+                category.Description,
+                category.Featured
+            });
+
+            Console.WriteLine($"{rows} linhas alteradas");
+
+            var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
             foreach (var item in categories)
             {
                 Console.WriteLine($"{item.Id} - {item.Title}");
             }
-
-
             // Microsoft.Data.SqlClient
         }
     }
