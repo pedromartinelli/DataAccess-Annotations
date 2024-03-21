@@ -13,8 +13,9 @@ namespace DataAccess
 
             using var connection = new SqlConnection(connectionString);
             //CreateCategory(connection);
+            CreateManyCategories(connection);
             //GetCategory(connection);
-            //ListCategories(connection);
+            ListCategories(connection);
             //UpdateCategory(connection);
             //DeleteCategory(connection);
         }
@@ -57,6 +58,67 @@ namespace DataAccess
 
             Console.WriteLine($"{rows} registros cadastrados");
         }
+        static void CreateManyCategories(SqlConnection connection)
+        {
+            var category = new Category();
+            category.Id = Guid.NewGuid();
+            category.Title = "Amazon AWS";
+            category.Url = "amazon";
+            category.Description = "Categoria destinada a serviços do AWS";
+            category.Order = 8;
+            category.Summary = "AWS Cloud";
+            category.Featured = false;
+
+            var category2 = new Category();
+            category2.Id = Guid.NewGuid();
+            category2.Title = "Nova categoria";
+            category2.Url = "categoria";
+            category2.Description = "Descrição da categoria nova";
+            category2.Order = 9;
+            category2.Summary = "Categoria";
+            category2.Featured = true;
+
+            var insertQuery = @"
+                INSERT INTO
+                    [Category]
+                VALUES
+                (
+                    @Id,
+                    @Title,
+                    @Url,
+                    @Summary,
+                    @Order,
+                    @Description,
+                    @Featured
+                )";
+
+            var rows = connection.Execute(insertQuery, new[]
+            {
+                new
+                {
+                    category.Id,
+                    category.Title,
+                    category.Url,
+                    category.Summary,
+                    category.Order,
+                    category.Description,
+                    category.Featured
+                },
+                new
+                {
+                    category2.Id,
+                    category2.Title,
+                    category2.Url,
+                    category2.Summary,
+                    category2.Order,
+                    category2.Description,
+                    category2.Featured
+                }
+            });
+
+            Console.WriteLine($"{rows} registros cadastrados");
+        }
+
         static void ListCategories(SqlConnection connection)
         {
             var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
