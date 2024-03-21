@@ -12,18 +12,11 @@ namespace DataAccess
             string connectionString = "Server=localhost,1433;Database=balta;User Id=sa;Password=1q2w3e!@#; TrustServerCertificate=true;";
 
             using var connection = new SqlConnection(connectionString);
-            UpdateCategory(connection);
-            ListCategories(connection);
             //CreateCategory(connection);
-        }
-
-        static void ListCategories(SqlConnection connection)
-        {
-            var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
-            foreach (var item in categories)
-            {
-                Console.WriteLine($"{item.Id} - {item.Title}");
-            }
+            //GetCategory(connection);
+            //ListCategories(connection);
+            //UpdateCategory(connection);
+            //DeleteCategory(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -64,7 +57,25 @@ namespace DataAccess
 
             Console.WriteLine($"{rows} registros cadastrados");
         }
+        static void ListCategories(SqlConnection connection)
+        {
+            var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
+            foreach (var item in categories)
+            {
+                Console.WriteLine($"{item.Id} - {item.Title}");
+            }
+        }
+        static void GetCategory(SqlConnection connection)
+        {
+            var getQuery = @"SELECT [Id], [Title], [Description] FROM [Category] WHERE [Id] = @Id";
 
+            var item = connection.QueryFirstOrDefault<Category>(getQuery, new
+            {
+                Id = "af3407aa-11ae-4621-a2ef-2028b85507c4"
+            });
+
+            Console.WriteLine($"{item.Id} - {item.Title} - {item.Description}");
+        }
         static void UpdateCategory(SqlConnection connection)
         {
             var updateQuery = @"
@@ -83,6 +94,19 @@ namespace DataAccess
             });
 
             Console.WriteLine($"{rows} registros atualizados");
+        }
+        static void DeleteCategory(SqlConnection connection)
+        {
+            var deleteQuery = @"
+                    DELETE [Category] WHERE [Id] = @Id;
+                ";
+
+            var rows = connection.Execute(deleteQuery, new
+            {
+                Id = "165de31a-7135-4344-bbe7-36be79dfe299"
+            });
+
+            Console.WriteLine($"{rows} itens excluído");
         }
     }
 }
