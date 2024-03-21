@@ -11,6 +11,22 @@ namespace DataAccess
             // string de conexão com o banco
             string connectionString = "Server=localhost,1433;Database=balta;User Id=sa;Password=1q2w3e!@#; TrustServerCertificate=true;";
 
+            using var connection = new SqlConnection(connectionString);
+            ListCategories(connection);
+            //CreateCategory(connection);
+        }
+
+        static void ListCategories(SqlConnection connection)
+        {
+            var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
+            foreach (var item in categories)
+            {
+                Console.WriteLine($"{item.Id} - {item.Title}");
+            }
+        }
+
+        static void CreateCategory(SqlConnection connection)
+        {
             var category = new Category();
             category.Id = Guid.NewGuid();
             category.Title = "Amazon AWS";
@@ -34,9 +50,6 @@ namespace DataAccess
                     @Featured
                 )";
 
-
-            using var connection = new SqlConnection(connectionString);
-
             var rows = connection.Execute(insertSql, new
             {
                 category.Id,
@@ -49,13 +62,6 @@ namespace DataAccess
             });
 
             Console.WriteLine($"{rows} linhas alteradas");
-
-            var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
-            foreach (var item in categories)
-            {
-                Console.WriteLine($"{item.Id} - {item.Title}");
-            }
-            // Microsoft.Data.SqlClient
         }
     }
 }
