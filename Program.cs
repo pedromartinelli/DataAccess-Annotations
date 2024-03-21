@@ -21,7 +21,8 @@ namespace DataAccess
             //DeleteCategory(connection, "593a505e-0372-409b-8501-7f3ad53d9ccb");
             //ExecuteProcedure(connection);
             //ExecuteScalar(connection);
-            ReadView(connection);
+            //ReadView(connection);
+            OneToOne(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -249,6 +250,24 @@ namespace DataAccess
             foreach (var item in courses)
             {
                 Console.WriteLine($"{item.Title}");
+            }
+        }
+        static void OneToOne(SqlConnection connection)
+        {
+            var sql = @"
+                SELECT
+                    *
+                FROM
+                    [CareerItem]
+                INNER JOIN
+                   [Course] ON [CareerItem].[CourseId] = [Course].[Id]
+            ";
+
+            var items = connection.Query(sql);
+
+            foreach (var item in items)
+            {
+                Console.WriteLine($"{item.DurationInMinutes}");
             }
         }
     }
