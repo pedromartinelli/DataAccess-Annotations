@@ -15,12 +15,13 @@ namespace DataAccess
             using var connection = new SqlConnection(connectionString);
             //CreateCategory(connection);
             //CreateManyCategories(connection);
-            GetCategory(connection);
+            //GetCategory(connection);
             //ListCategories(connection);
             //UpdateCategory(connection);
             //DeleteCategory(connection, "593a505e-0372-409b-8501-7f3ad53d9ccb");
             //ExecuteProcedure(connection);
             //ExecuteScalar(connection);
+            ReadView(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -240,6 +241,15 @@ namespace DataAccess
             Console.WriteLine($"A categoria cadastrada foi : {id}");
         }
 
+        static void ReadView(SqlConnection connection)
+        {
+            var viewQuery = "SELECT * FROM [vwCourses]";
 
+            var courses = connection.Query(viewQuery);
+            foreach (var item in courses)
+            {
+                Console.WriteLine($"{item.Title}");
+            }
+        }
     }
 }
