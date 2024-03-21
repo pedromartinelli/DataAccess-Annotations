@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DataAccess.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DataAccess
 {
@@ -13,11 +14,12 @@ namespace DataAccess
 
             using var connection = new SqlConnection(connectionString);
             //CreateCategory(connection);
-            CreateManyCategories(connection);
+            //CreateManyCategories(connection);
             //GetCategory(connection);
-            ListCategories(connection);
+            //ListCategories(connection);
             //UpdateCategory(connection);
             //DeleteCategory(connection);
+            ExecuteProcedure(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -118,7 +120,6 @@ namespace DataAccess
 
             Console.WriteLine($"{rows} registros cadastrados");
         }
-
         static void ListCategories(SqlConnection connection)
         {
             var categories = connection.Query<Category>("SELECT [Id], [Title] FROM [Category] ORDER BY [Id]");
@@ -169,6 +170,15 @@ namespace DataAccess
             });
 
             Console.WriteLine($"{rows} itens excluído");
+        }
+
+        static void ExecuteProcedure(SqlConnection connection)
+        {
+            var sql = "[spDeleteStudent]";
+            var prs = new { StudentId = "c5db9d4b-d7f1-433b-9f73-8f8bef2627e6" };
+            var rows = connection.Execute(sql, prs, commandType: CommandType.StoredProcedure);
+
+            Console.WriteLine($"{rows} linhas afetadas");
         }
     }
 }
