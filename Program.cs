@@ -12,6 +12,7 @@ namespace DataAccess
             string connectionString = "Server=localhost,1433;Database=balta;User Id=sa;Password=1q2w3e!@#; TrustServerCertificate=true;";
 
             using var connection = new SqlConnection(connectionString);
+            UpdateCategory(connection);
             ListCategories(connection);
             //CreateCategory(connection);
         }
@@ -36,7 +37,7 @@ namespace DataAccess
             category.Summary = "AWS Cloud";
             category.Featured = false;
 
-            var insertSql = @"
+            var insertQuery = @"
                 INSERT INTO
                     [Category]
                 VALUES
@@ -50,7 +51,7 @@ namespace DataAccess
                     @Featured
                 )";
 
-            var rows = connection.Execute(insertSql, new
+            var rows = connection.Execute(insertQuery, new
             {
                 category.Id,
                 category.Title,
@@ -61,7 +62,27 @@ namespace DataAccess
                 category.Featured
             });
 
-            Console.WriteLine($"{rows} linhas alteradas");
+            Console.WriteLine($"{rows} registros cadastrados");
+        }
+
+        static void UpdateCategory(SqlConnection connection)
+        {
+            var updateQuery = @"
+                UPDATE
+                    [Category]
+                SET 
+                    [Title] = @Title 
+                WHERE
+                    [Id] = @Id
+                ";
+
+            var rows = connection.Execute(updateQuery, new
+            {
+                Id = "af3407aa-11ae-4621-a2ef-2028b85507c4",
+                Title = "Frontend 2024"
+            });
+
+            Console.WriteLine($"{rows} registros atualizados");
         }
     }
 }
