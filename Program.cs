@@ -19,7 +19,8 @@ namespace DataAccess
             //ListCategories(connection);
             //UpdateCategory(connection);
             //DeleteCategory(connection);
-            ExecuteProcedure(connection);
+            //ExecuteProcedure(connection);
+            ExecuteReadProcedure(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -166,7 +167,7 @@ namespace DataAccess
 
             var rows = connection.Execute(deleteQuery, new
             {
-                Id = "165de31a-7135-4344-bbe7-36be79dfe299"
+                Id = "527ca66f-0b9c-4cfe-93dc-8798ffb59eca"
             });
 
             Console.WriteLine($"{rows} itens excluído");
@@ -180,5 +181,18 @@ namespace DataAccess
 
             Console.WriteLine($"{rows} linhas afetadas");
         }
+        static void ExecuteReadProcedure(SqlConnection connection)
+        {
+            var procedure = "[spGetCoursesBycategory]";
+            var pars = new { CategoryId = "09ce0b7b-cfca-497b-92c0-3290ad9d5142" };
+            var courses = connection.Query(procedure, pars, commandType: CommandType.StoredProcedure);
+
+            foreach (var item in courses)
+            {
+                Console.WriteLine($"{item.Title}");
+            }
+
+        }
+
     }
 }
