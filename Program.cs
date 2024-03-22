@@ -256,18 +256,27 @@ namespace DataAccess
         {
             var sql = @"
                 SELECT
-                    *
+                    [CareerItem].[Title],
+                    [Course].[Title],  
+                    [Course].[DurationInMinutes]
                 FROM
                     [CareerItem]
                 INNER JOIN
                    [Course] ON [CareerItem].[CourseId] = [Course].[Id]
             ";
 
-            var items = connection.Query(sql);
+            var items = connection.Query<CareerItem, Course, CareerItem>(
+                sql,
+                (careerItem, course) =>
+                {
+                    careerItem.Course = course;
+                    return careerItem;
+
+                }, splitOn: "Title");
 
             foreach (var item in items)
             {
-                Console.WriteLine($"{item.DurationInMinutes}");
+                Console.WriteLine($"{item.Title} -  {item.Course.Title} - {item.Course.DurationInMinutes}");
             }
         }
     }
