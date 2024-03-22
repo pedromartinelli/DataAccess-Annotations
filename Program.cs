@@ -23,7 +23,7 @@ namespace DataAccess
             //ExecuteScalar(connection);
             //ReadView(connection);
             //QueryMultiple(connection);
-            SelectIn(connection);
+            Like(connection, "api");
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -362,6 +362,21 @@ namespace DataAccess
             foreach (var career in careers)
             {
                 Console.WriteLine($"{career.Title}");
+            };
+        }
+
+        static void Like(SqlConnection connection, string term)
+        {
+            var sql = @"SELECT * FROM [Course] WHERE [Title] LIKE @exp";
+
+            var items = connection.Query<Course>(sql, new
+            {
+                exp = $"%{term}%"
+            });
+
+            foreach (var item in items)
+            {
+                Console.WriteLine($"{item.Title}");
             };
         }
     }
