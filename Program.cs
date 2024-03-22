@@ -16,14 +16,15 @@ namespace DataAccess
             //CreateCategory(connection);
             //CreateManyCategories(connection);
             //GetCategory(connection);
-            //ListCategories(connection);
             //UpdateCategory(connection);
-            //DeleteCategory(connection, "593a505e-0372-409b-8501-7f3ad53d9ccb");
+            DeleteCategory(connection, "d68cae92-3386-452c-93ea-735ee8e8e04a");
             //ExecuteProcedure(connection);
             //ExecuteScalar(connection);
             //ReadView(connection);
             //QueryMultiple(connection);
-            Like(connection, "api");
+            //Like(connection, "api");
+            //Transaction(connection);
+            ListCategories(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -378,6 +379,51 @@ namespace DataAccess
             {
                 Console.WriteLine($"{item.Title}");
             };
+        }
+
+        static void Transaction(SqlConnection connection)
+        {
+            var category = new Category();
+            category.Id = Guid.NewGuid();
+            category.Title = "Categoria rollback";
+            category.Url = "amazon";
+            category.Description = "Categoria destinada a serviços do AWS";
+            category.Order = 8;
+            category.Summary = "AWS Cloud";
+            category.Featured = false;
+
+            var insertQuery = @$"
+                INSERT INTO
+                    [Category]
+                VALUES
+                (
+                    @Id,
+                    @Title,
+                    @Url,
+                    @Summary,
+                    @Order,
+                    @Description,
+                    @Featured
+                )";
+
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+
+            var rows = connection.Execute(insertQuery, new
+            {
+                category.Id,
+                category.Title,
+                category.Url,
+                category.Summary,
+                category.Order,
+                category.Description,
+                category.Featured
+            }, transaction);
+
+            transaction.Commit();
+            //transaction.Rollback();
+
+            Console.WriteLine($"{rows} registros cadastrados");
         }
     }
 }
