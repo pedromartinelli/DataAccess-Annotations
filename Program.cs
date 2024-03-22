@@ -22,7 +22,7 @@ namespace DataAccess
             //ExecuteProcedure(connection);
             //ExecuteScalar(connection);
             //ReadView(connection);
-            OneToMany(connection);
+            QueryMultiple(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -323,6 +323,25 @@ namespace DataAccess
                 {
                     Console.WriteLine($" - {item.Title}");
                 }
+            }
+        }
+
+        static void QueryMultiple(SqlConnection connection)
+        {
+            var sql = "SELECT * FROM [Category]; SELECT * FROM [Course]";
+
+            using var multi = connection.QueryMultiple(sql);
+            var categories = multi.Read<Category>();
+            var courses = multi.Read<Course>();
+
+            foreach (var item in categories)
+            {
+                Console.WriteLine(item.Title);
+            }
+
+            foreach (var item in courses)
+            {
+                Console.WriteLine(item.Title);
             }
         }
     }
