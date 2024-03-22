@@ -22,7 +22,7 @@ namespace DataAccess
             //ExecuteProcedure(connection);
             //ExecuteScalar(connection);
             //ReadView(connection);
-            OneToOne(connection);
+            OneToMany(connection);
         }
 
         static void CreateCategory(SqlConnection connection)
@@ -36,7 +36,7 @@ namespace DataAccess
             category.Summary = "AWS Cloud";
             category.Featured = false;
 
-            var insertQuery = @"
+            var insertQuery = @$"
                 INSERT INTO
                     [Category]
                 VALUES
@@ -252,6 +252,7 @@ namespace DataAccess
                 Console.WriteLine($"{item.Title}");
             }
         }
+
         static void OneToOne(SqlConnection connection)
         {
             var sql = @"
@@ -277,6 +278,51 @@ namespace DataAccess
             foreach (var item in items)
             {
                 Console.WriteLine($"{item.Title} -  {item.Course.Title} - {item.Course.DurationInMinutes}");
+            }
+        }
+        static void OneToMany(SqlConnection connection)
+        {
+            var sql = @"
+                SELECT
+                    [Career].[Id],
+                    [Career].[Title],
+                    [CareerItem].[CareerId],
+                    [CareerItem].[Title]
+                FROM
+                    [Career]
+                INNER JOIN
+                   [CareerItem] ON [Career].[Id] = [CareerItem].[CareerId]
+                ORDER BY
+                    [Career].[Title]
+            ";
+
+            var careers = new List<Career>();
+            connection.Query<Career, CareerItem, Career>(
+                sql,
+                (career, item) =>
+                {
+                    var car = careers.Where(x => x.Id == career.Id).FirstOrDefault();
+                    if (car == null)
+                    {
+                        car = career;
+                        car.Items.Add(item);
+                        careers.Add(car);
+                    }
+                    else
+                    {
+                        car.Items.Add(item);
+                    }
+
+                    return career;
+                }, splitOn: "CareerId");
+
+            foreach (var career in careers)
+            {
+                Console.WriteLine($"{career.Title}");
+                foreach (var item in career.Items)
+                {
+                    Console.WriteLine($" - {item.Title}");
+                }
             }
         }
     }

@@ -4,11 +4,11 @@
     {
         public Career()
         {
-            CareerItems = new List<CareerItem>();
+            Items = new List<CareerItem>();
         }
 
         public Guid Id { get; set; }
-        public string Title { get; set; }
-        public IList<CareerItem> CareerItems { get; set; }
+        public string Title { get; set; } = null!;
+        public IList<CareerItem> Items { get; set; }
     }
 }
